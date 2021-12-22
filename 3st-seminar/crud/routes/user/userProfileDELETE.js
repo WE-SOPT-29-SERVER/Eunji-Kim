@@ -42,3 +42,5 @@ module.exports = async (req, res) => {
         util.success(statusCode.OK, responseMessage.USER_DELETE_SUCCESS, newUser)
       );
   };
+
+  
