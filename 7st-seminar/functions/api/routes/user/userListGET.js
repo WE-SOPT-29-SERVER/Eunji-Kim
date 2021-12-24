@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       client = await db.connect(req);
   
       // 빌려온 connection을 사용해 우리가 db/user.js에서 미리 정의한 SQL 쿼리문을 날려줍니다.
-      const users = await userDB.getAllusers(client);
+      const users = await userDB.getAllUsers(client);
   
       // 성공적으로 users를 가져왔다면, response를 보내줍니다.
       res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_ALL_USERS_SUCCESS, { users }));
