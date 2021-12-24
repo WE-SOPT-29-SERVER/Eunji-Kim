@@ -13,4 +13,7 @@ router.get("/", (req, res) => {
   res.status(200).send(result);
 });
 
+router.use("/blog", require("./blog"));
+router.use("/users", require("./users"));
+
 module.exports = router; // 생성한 router 객체를 모듈로 반환
