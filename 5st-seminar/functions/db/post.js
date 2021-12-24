@@ -1,12 +1,12 @@
-const _ = require('lodash');
-const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
+const _ = require("lodash");
+const convertSnakeToCamel = require("../lib/convertSnakeToCamel");
 
 const getAllPosts = async (client) => {
   const { rows } = await client.query(
     `
     SELECT * FROM post p
     WHERE is_deleted = FALSE
-    `,
+    `
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
@@ -18,7 +18,7 @@ const getPostById = async (client, postId) => {
     WHERE id = $1
       AND is_deleted = FALSE
     `,
-    [postId],
+    [postId]
   );
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
@@ -32,7 +32,7 @@ const addPost = async (client, userId, title, content) => {
     ($1, $2, $3)
     RETURNING *
     `,
-    [userId, title, content],
+    [userId, title, content]
   );
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
@@ -44,12 +44,15 @@ const updatePost = async (client, title, content, postId) => {
     WHERE id = $1
        AND is_deleted = FALSE
     `,
-    [postId],
+    [postId]
   );
 
   if (existingRows.length === 0) return false;
 
-  const data = _.merge({}, convertSnakeToCamel.keysToCamel(existingRows[0]), { title, content });
+  const data = _.merge({}, convertSnakeToCamel.keysToCamel(existingRows[0]), {
+    title,
+    content,
+  });
 
   const { rows } = await client.query(
     `
@@ -58,7 +61,7 @@ const updatePost = async (client, title, content, postId) => {
     WHERE id = $3
     RETURNING * 
     `,
-    [data.title, data.content, postId],
+    [data.title, data.content, postId]
   );
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
@@ -71,7 +74,7 @@ const deletePost = async (client, postId) => {
     WHERE id = $1
     RETURNING *
     `,
-    [postId],
+    [postId]
   );
 
   return convertSnakeToCamel.keysToCamel(rows[0]);
@@ -84,7 +87,7 @@ const getPostsByUserId = async (client, userId) => {
     WHERE user_id = $1
       AND is_deleted = FALSE
     `,
-    [userId],
+    [userId]
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
@@ -96,9 +99,17 @@ const getPostsByUserIds = async (client, userIds) => {
     SELECT * FROM post
     WHERE user_id IN (${userIds.join()})
       AND is_deleted = FALSE
-    `,
+    `
   );
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
-module.exports = { getAllPosts, getPostById, addPost, updatePost, deletePost, getPostsByUserId, getPostsByUserIds };
+module.exports = {
+  getAllPosts,
+  getPostById,
+  addPost,
+  updatePost,
+  deletePost,
+  getPostsByUserId,
+  getPostsByUserIds,
+};
