@@ -8,16 +8,24 @@ const { postDB } = require("../../../db");
 module.exports = async (req, res) => {
   const { userId, title, content } = req.body;
 
-  if (!userId)
-    return res
-      .status(statusCode.BAD_REQUEST)
-      .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
+  // next()를 통해 넘어온 req.imageURls를 사용합니다!
+  const imageUrls = req.imageUrls;
+
+  console.log(userId, title, content);
+
+  // if (!userId) return res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
 
   let client;
 
   try {
     client = await db.connect(req);
-    const post = await postDB.addPost(client, userId, title, content);
+    const post = await postDB.addPost(
+      client,
+      userId,
+      title,
+      content,
+      imageUrls
+    );
 
     res
       .status(statusCode.OK)
